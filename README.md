@@ -1,6 +1,3 @@
-# O-1--Attendance-Architecture
-Optimized classroom attendance latency from $O(N)$ to $O(1)$ by architecting a distributed 'Push' model. Leveraged Hash-Set based filtering to prevent duplicate entries in constant time and implemented a local-storage buffer to bypass $3^{rd}$ party API rate-limiting bottlenecks
-<div align="center">
 <div align="center">
 
 # ⚡ AttendX — High-Density Attendance Architecture
@@ -18,6 +15,21 @@ Optimized classroom attendance latency from $O(N)$ to $O(1)$ by architecting a d
 *Takes 100+ students from scan to confirmation in under a second — no internet, no rate limits, no dropped records.*
 
 </div>
+
+---
+
+## Contents
+
+- [The Problem This Solves](#-the-problem-this-solves)
+- [Architecture Overview](#️-architecture-overview)
+- [Key Features](#-key-features)
+- [Project Structure](#️-project-structure)
+- [How It Works](#️-how-it-works)
+- [Setup & Deployment](#-setup--deployment)
+- [Security & Threat Model](#️-security--threat-model)
+- [Known Limitations](#️-known-limitations)
+- [Complexity Summary](#-complexity-summary)
+- [Roadmap](#️-roadmap)
 
 ---
 
