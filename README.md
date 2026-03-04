@@ -1,6 +1,7 @@
 # O-1--Attendance-Architecture
 Optimized classroom attendance latency from $O(N)$ to $O(1)$ by architecting a distributed 'Push' model. Leveraged Hash-Set based filtering to prevent duplicate entries in constant time and implemented a local-storage buffer to bypass $3^{rd}$ party API rate-limiting bottlenecks
 <div align="center">
+<div align="center">
 
 # ⚡ AttendX — High-Density Attendance Architecture
 
@@ -22,9 +23,23 @@ Optimized classroom attendance latency from $O(N)$ to $O(1)$ by architecting a d
 
 ## 📌 The Problem This Solves
 
+### The Real-World Trigger
+
+At **NIT Jalandhar**, a standard lecture slot is 50 minutes. Passing a physical register down every row of a 60–80 student classroom routinely burns **5 to 10 minutes** of that — just waiting for a sheet of paper to travel and come back. That's up to **20% of the lecture gone** before a single concept is taught, every single class, every single day.
+
+The register is, algorithmically, an **O(N) sequential operation** — each student signs one after another. Digitizing it naively (having a server scan a list of enrolled users for each incoming check-in) doesn't fix the complexity, it just moves the same O(N) bottleneck online.
+
+### The Algorithmic Problem
+
 Most attendance tools hit a wall the moment an entire class tries to check in at once. Traditional systems scan a central database for every incoming request — that's **O(N) complexity** — which means the 100th student's request is 100× slower to validate than the first. Add a cloud API with a 60-writes-per-minute limit on top of that, and you get a guaranteed failure during peak load.
 
-**AttendX flips the model.** Students push their own data to a lightweight local edge server. Validation runs against in-memory hash sets. Cloud sync happens *after* the session ends, in a single batched call. The result is constant-time processing regardless of class size, zero dependency on live internet during the session, and no lost records.
+The root cause isn't the medium (paper vs. app) — it's the **data structure underneath**. Iterating an array or querying a table row-by-row to find a match is a linear search. No amount of better UI fixes that.
+
+### The Fix
+
+**AttendX flips the model.** Students push their own data to a lightweight local edge server. Validation runs against in-memory hash sets — **O(1) lookups, always**, regardless of whether there are 10 students or 200. Cloud sync happens *after* the session ends, in a single batched call. The result is constant-time processing, zero dependency on live internet during the session, and no lost records.
+
+The 5–10 minute tax on every lecture drops to under 60 seconds.
 
 ---
 
