@@ -144,7 +144,7 @@ attendx/
 ### Installation
 
 ```bash
-git clone https://github.com/your-username/attendx.git
+https://github.com/DEVKING-Kunal/O-1--Attendance-Architecture.git
 cd attendx
 pip install -r requirements.txt
 ```
