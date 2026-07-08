@@ -9,10 +9,6 @@ What changed vs v1:
   - Crash-safe: the buffer is auto-flushed to disk every N seconds,
     not just on a clean Ctrl+C. A killed process now loses at most
     one flush interval of data instead of the whole session.
-  - Native handling of the OS-level "is this a captive portal?" probe
-    requests that iOS / Android / Windows fire the instant a device
-    joins a network. This is what lets the form open automatically —
-    see dns_redirect.py for the other half of that mechanism.
   - The "reject VPN/proxy submissions" behaviour the README already
     documented is now actually implemented, not just claimed.  
 """
@@ -32,10 +28,7 @@ from fastapi import FastAPI, Form, Request
 from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from pydantic_settings import BaseSettings
 
-# --------------------------------------------------------------------------
 # Configuration — override any of these with env vars, e.g. ATTENDX_PORT=8080
-# --------------------------------------------------------------------------
-
 
 class Settings(BaseSettings):
     host: str = "0.0.0.0"
@@ -61,9 +54,7 @@ logging.basicConfig(
 )
 log = logging.getLogger("attendx")
 
-# --------------------------------------------------------------------------
 # In-memory state — same O(1) design as v1, now behind an asyncio lock
-# --------------------------------------------------------------------------
 
 attendance_buffer: dict[str, dict] = {}
 submitted_macs: set[str] = set()
@@ -129,9 +120,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="AttendX", lifespan=lifespan)
 
-# --------------------------------------------------------------------------
 # UI
-# --------------------------------------------------------------------------
 
 PAGE_TEMPLATE = """
 <!DOCTYPE html>
@@ -187,9 +176,7 @@ def render_page(status: str = "none", roll: Optional[str] = None, message: Optio
     return PAGE_TEMPLATE.format(session=html.escape(SESSION_ID), body=body)
 
 
-# --------------------------------------------------------------------------
 # Core routes
-# --------------------------------------------------------------------------
 
 
 @app.get("/", response_class=HTMLResponse)
